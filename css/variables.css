@@ -1,0 +1,41 @@
+:root {
+  --color-bg-primary: #0d0d0d;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-card: #242424;
+  --color-bg-card-hover: #2e2e2e;
+
+  --color-accent: #ff6b00;
+  --color-accent-hover: #ff8c33;
+  --color-accent-dim: rgba(255, 107, 0, 0.15);
+
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted: #666;
+
+  --color-banner-bg: #ffe100;
+  --color-banner-text: #1a1a1a;
+
+  --color-border: #333;
+  --color-success: #4caf50;
+  --color-danger: #e53935;
+
+  --font-heading: 'Oswald', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+
+  --banner-height: 40px;
+  --nav-height: 64px;
+  --header-offset: calc(var(--banner-height) + var(--nav-height));
+
+  --container-width: 1200px;
+  --container-padding: 16px;
+  --section-padding: 80px 0;
+  --gap: 24px;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s ease;
+  --transition-slow: 0.6s ease;
+}

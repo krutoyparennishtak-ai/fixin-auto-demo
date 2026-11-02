@@ -1,0 +1,132 @@
+.wall {
+  background: var(--color-bg-secondary);
+}
+
+.wall__form {
+  max-width: 600px;
+  margin: 0 auto 48px;
+}
+
+.wall__input-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.wall__textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 16px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+}
+
+.wall__textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.wall__textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.wall__char-count {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.wall__char-count--limit {
+  color: var(--color-danger);
+}
+
+.wall__form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wall__error {
+  font-size: 0.85rem;
+  color: var(--color-danger);
+  display: none;
+}
+
+.wall__error.visible {
+  display: block;
+}
+
+.wall__submit {
+  flex-shrink: 0;
+}
+
+.wall__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Messages Grid ── */
+.wall__messages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--gap);
+}
+
+.wall__message {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border-left: 3px solid var(--color-accent);
+  animation: fadeInUp 0.4s ease;
+}
+
+.wall__message-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.wall__message-time {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.wall__loading {
+  text-align: center;
+  padding: 32px;
+  color: var(--color-text-muted);
+}
+
+.wall__empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .wall__messages {
+    grid-template-columns: 1fr;
+  }
+}

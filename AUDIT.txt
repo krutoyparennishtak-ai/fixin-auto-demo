@@ -1,0 +1,1162 @@
+================================================================================
+ FIXIN AUTO — COMPLETE SITE AUDIT
+ Last updated: 2026-11-02
+================================================================================
+
+This document is an exhaustive breakdown of every file, feature, design
+decision, and technical detail in the Fixin Auto demo portfolio website.
+
+
+================================================================================
+ 1. PROJECT OVERVIEW
+================================================================================
+
+Name:           Fixin Auto
+Type:           Demo / portfolio showcase (NOT a real business)
+Language:       English (all user-facing content)
+Purpose:        A freelance portfolio piece demonstrating two competencies:
+                1) Visual interactivity and UX (scroll-driven animations,
+                   parallax, responsive design)
+                2) Cloud data automation (Google Sheets integration via
+                   Apps Script for a live "Guest Wall" feature)
+
+Tech Stack:     Pure HTML5, CSS3, vanilla JavaScript
+                No frameworks, no npm, no build tools, no dependencies
+                Google Apps Script as serverless backend
+                Google Sheets as cloud database
+
+Local Dev:      python3 -m http.server 8000  (from project root)
+
+
+================================================================================
+ 2. FILE STRUCTURE
+================================================================================
+
+freelance/
+├── index.html                 Main (and only) HTML page — 371 lines
+├── AUDIT.txt                  This file
+├── .gitignore                 Git ignore rules
+│
+├── css/
+│   ├── reset.css              Minimal CSS reset (37 lines)
+│   ├── variables.css          Design tokens / CSS custom properties (41 lines)
+│   ├── main.css               Global styles, buttons, reveal classes (80 lines)
+│   ├── banner.css             Fixed demo banner (29 lines)
+│   ├── hero.css               Hero section + wheel animation (104 lines)
+│   ├── sections.css           Nav, Services, Prices, About, Contacts, Footer,
+│                              Responsive breakpoints (493 lines)
+│   └── wall.css               Guest Wall form + message cards (133 lines)
+│
+├── js/
+│   ├── scroll-animation.js    Wheel rotation, parallax, IntersectionObserver
+│                              reveals, count-up stats, stagger delays (102 lines)
+│   ├── smooth-scroll.js       Smooth anchor scrolling with offset (37 lines)
+│   ├── mobile-menu.js         Hamburger menu toggle + outside click (27 lines)
+│   ├── moderation.js          Client-side hate-speech filter (75 lines)
+│   └── wall.js                Guest Wall: fetch/post/render messages (195 lines)
+│
+├── assets/
+│   └── img/
+│       ├── favicon.svg        Orange wrench icon on dark background (534 B)
+│       ├── wheel.svg          5-spoke alloy wheel for hero animation (2.3 KB)
+│       ├── hero-bg.jpg        Mechanic with wrench, dark moody (186 KB)
+│       ├── engine.jpg         5.0L engine bay close-up, carbon fiber (68 KB)
+│       ├── oil-change.jpg     Mercedes oil pour (86 KB)
+│       ├── suspension.jpg     Red coilover spring close-up (76 KB)
+│       ├── tires.jpg          Tire rack with price/spec labels (115 KB)
+│       ├── body-repair.jpg    Multiple Nissan cars in body shop (142 KB)
+│       ├── auto-painting.jpg  Car being polished / buffed (91 KB)
+│       ├── aboutus.jpg        SUV driving through sand dunes (89 KB)
+│       └── workshop.jpg       Workshop with vehicle ramps (188 KB)
+│
+├── apps-script/
+│   └── Code.gs                Google Apps Script backend source (169 lines)
+│
+└── img/                       Raw user uploads (originals, not referenced by site)
+    ├── aboutus.jpg
+    ├── auto-painting.jpg
+    ├── body-repair.jpg
+    ├── engine.jpg
+    ├── hero-bg.jpg
+    ├── oil-change.jpg
+    ├── suspension.jpg
+    ├── tires.jpg
+    └── workshop.jpg
+
+
+================================================================================
+ 3. index.html — PAGE STRUCTURE
+================================================================================
+
+The entire site is a single HTML file (371 lines). Document language is "en".
+
+3.1  <head>
+     - charset: UTF-8
+     - viewport: width=device-width, initial-scale=1.0
+     - <title>: "Fixin Auto — Auto Service"
+     - <meta description>: "Demo case: Fixin Auto service website. Portfolio
+       example — interactivity, UX, cloud automation."
+     - Google Fonts loaded via <link> with preconnect for performance:
+         Oswald (400, 700) — headings
+         Roboto (300, 400, 500) — body text
+     - Favicon: <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+     - 7 CSS files loaded in order:
+         reset.css → variables.css → main.css → banner.css → hero.css →
+         sections.css → wall.css
+
+3.2  Sections (in order of appearance):
+
+     ┌─────────────────┬──────────────────────────────────────────────────┐
+     │ Section         │ HTML ID / class                                 │
+     ├─────────────────┼──────────────────────────────────────────────────┤
+     │ Demo Banner     │ .demo-banner (div)                              │
+     │ Navigation      │ .nav (nav)                                      │
+     │ Hero            │ #hero                                           │
+     │ Services        │ #services                                       │
+     │ Pricing         │ #prices                                         │
+     │ About Us        │ #about                                          │
+     │ Contacts        │ #contacts                                       │
+     │ Guest Wall      │ #wall                                           │
+     │ Footer          │ .footer (footer)                                │
+     └─────────────────┴──────────────────────────────────────────────────┘
+
+3.3  Scripts (loaded at end of <body>, in order):
+     1. scroll-animation.js — must load first (registers scroll listener)
+     2. smooth-scroll.js
+     3. mobile-menu.js
+     4. moderation.js — must load before wall.js (defines FixinModeration)
+     5. wall.js — depends on FixinModeration global
+
+
+================================================================================
+ 4. DEMO BANNER
+================================================================================
+
+Purpose:        Clearly marks the site as a portfolio demo, not a real business.
+
+Text:           "Demo / portfolio example — this is not a real business"
+
+Positioning:    position: fixed; top: 0; z-index: 9999
+                Always visible, stays above everything including the nav.
+
+Height:         var(--banner-height) = 40px
+                All page content is offset below this height.
+
+Visual Style:   Diagonal yellow stripe pattern created with:
+                repeating-linear-gradient(-45deg, #ffe100, #ffe100 10px,
+                                          #ffd700 10px, #ffd700 20px)
+                The text sits on a solid yellow background block for readability.
+
+CSS file:       css/banner.css (29 lines)
+
+
+================================================================================
+ 5. NAVIGATION
+================================================================================
+
+Structure:      <nav class="nav"> with .nav__inner container inside.
+                Left: logo "Fixin Auto" (Oswald font, "Auto" in accent orange).
+                Right: 5 navigation links.
+
+Links:          Services (#services), Pricing (#prices), About Us (#about),
+                Contacts (#contacts), Guest Wall (#wall)
+
+Positioning:    position: sticky; top: var(--banner-height)
+                Sticks directly below the demo banner when scrolling.
+
+Background:     Semi-transparent dark (rgba(13, 13, 13, 0.95)) with
+                backdrop-filter: blur(10px) for a frosted glass effect.
+                Falls back gracefully if backdrop-filter is unsupported.
+
+Height:         var(--nav-height) = 64px
+
+Link Hover:     Color transitions from secondary (#a0a0a0) to primary (#f0f0f0).
+                An orange underline animates in from left (width: 0 → 100%)
+                using a ::after pseudo-element.
+
+Hamburger:      Hidden on desktop (display: none).
+                Three <span> bars, 24px wide, 2px tall, white.
+                Appears at <= 768px via media query.
+                aria-label toggles between "Open menu" and "Close menu".
+
+Mobile Menu:    .nav__links.open creates a fixed sidebar panel:
+                - Right-aligned, 260px wide
+                - Slides in from right with CSS @keyframes slideIn
+                - Dark background (rgba(13, 13, 13, 0.98))
+                - Border-left for separation
+
+JS file:        js/mobile-menu.js (27 lines)
+                - Toggles .open class on click
+                - Updates aria-expanded attribute
+                - Closes on outside click (document-level listener)
+                - Does not close on click inside the menu itself
+
+CSS:            Defined in css/sections.css, lines 1-82 + responsive at 417-443
+
+
+================================================================================
+ 6. HERO SECTION
+================================================================================
+
+Layout:         Full viewport height (100vh), centered flex container.
+                margin-top: var(--banner-height) pushes it below the fixed banner.
+
+Background:     Three layers stacked via z-index:
+
+                Layer 1 (z-index: 1) — Photo background:
+                  .hero__bg wraps an <img> (hero-bg.jpg).
+                  The image uses object-fit: cover, loading="eager".
+                  A ::after pseudo-element overlays a gradient:
+                    linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.85))
+                  This darkens the photo so white text remains readable.
+
+                Layer 2 (z-index: 2) — Animated wheel SVG:
+                  .hero__wheel-wrapper positioned absolute, centered.
+                  Size: clamp(280px, 45vw, 550px) — responsive.
+                  Starts at opacity 0.25 (desktop) / 0.15 (mobile).
+                  has will-change: transform for GPU acceleration.
+
+                Layer 3 (z-index: 3) — Content overlay:
+                  .hero__content with heading, tagline, CTA button.
+
+Content:        <h1>: "FIXIN AUTO" — Oswald 700, clamp(2.5rem, 8vw, 6rem)
+                "Auto" is wrapped in <span> for accent orange color.
+                Tagline: "Your car is in reliable hands" — Roboto 300, lighter.
+                CTA button: "Our Services" — links to #services.
+
+Scroll Indicator:
+                Positioned absolute at bottom: 32px, centered.
+                Text "Scroll down" + double-chevron SVG.
+                Infinite bounce animation (2s ease, 10px travel).
+
+CSS file:       css/hero.css (104 lines)
+
+
+================================================================================
+ 7. SCROLL-DRIVEN WHEEL ANIMATION
+================================================================================
+
+File:           js/scroll-animation.js (102 lines)
+                Wrapped in an IIFE — no global pollution.
+
+7.1  Wheel Rotation + Parallax
+
+     Listener:   window.addEventListener('scroll', onScroll, { passive: true })
+                 passive: true prevents scroll jank (browser doesn't wait
+                 for preventDefault check).
+
+     Throttling:  requestAnimationFrame with a `ticking` flag.
+                  onScroll() sets ticking=true, schedules updateAnimations().
+                  updateAnimations() runs once per frame, resets ticking=false.
+
+     Calculations (only run when scrollY < heroH * 1.2):
+       rotation  = scrollY * 0.35         degrees clockwise
+       parallaxY = scrollY * 0.15         pixels downward
+       opacity   = max(0, 1 - scrollY/(heroH*0.8)) * 0.25
+
+     Applied via:
+       wheel.style.transform = 'rotate(' + rotation + 'deg) translateY(...)';
+       wheel.style.opacity = opacity * 0.25;
+
+     The wheel rotates as you scroll, drifts downward slightly (parallax),
+     and fades out as the hero scrolls offscreen.
+
+7.2  Reveal-on-Scroll (IntersectionObserver)
+
+     Targets:    All elements with class .reveal (service cards, price cards,
+                 about columns, contacts, map placeholder).
+
+     Initial:    opacity: 0; transform: translateY(30px)  (CSS in main.css)
+     Revealed:   opacity: 1; transform: translateY(0)     (class .revealed)
+     Transition: var(--transition-slow) = 0.6s ease
+
+     Observer:   threshold: 0.12 (triggers when 12% of element is visible).
+                 Once revealed, unobserve() is called — one-shot animation.
+
+7.3  Count-Up Animation (Stats)
+
+     Targets:    .stat__number[data-target] elements (3 total in About section).
+     Values:     10+ (years), 5000+ (customers), 50+ (car brands)
+
+     Observer:   threshold: 0.5 (triggers when 50% visible — ensures user sees
+                 the animation from the start).
+
+     Animation:  requestAnimationFrame loop, 1500ms duration.
+                 Easing: cubic ease-out — 1 - (1 - progress)^3
+                 Numbers format with toLocaleString('en-US') + '+' suffix.
+
+7.4  Stagger Delays
+
+     Applies incremental transitionDelay to .reveal elements inside:
+       .services__grid — 6 cards, delays: 0ms, 100ms, 200ms, 300ms, 400ms, 500ms
+       .prices__grid — 3 cards, delays: 0ms, 100ms, 200ms
+
+     Creates a cascading reveal effect as cards appear one-by-one.
+
+
+================================================================================
+ 8. SERVICES SECTION
+================================================================================
+
+Background:     var(--color-bg-secondary) = #1a1a1a
+Heading:        "Our Services" — "Services" in accent orange
+
+Grid Layout:    CSS Grid, 3 columns on desktop (repeat(3, 1fr))
+                2 columns at <= 1024px
+                1 column at <= 768px
+                Gap: var(--gap) = 24px
+
+Each service card (.service-card) contains:
+  1. Icon — 56x56px SVG, accent orange stroke
+  2. Title — Oswald, uppercase, 1.15rem
+  3. Description — Roboto, secondary gray, 0.9rem
+  4. Photo — 120px tall, object-fit: cover, rounded corners
+
+Card Hover:     Orange border appears, card lifts 4px (translateY(-4px)).
+                Photo opacity transitions from 0.8 to 1.0.
+
+Six service cards:
+
+  ┌──────────────────────┬─────────────────────────────────────────┬────────────────┐
+  │ Service              │ Description                             │ Photo          │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Engine Diagnostics   │ Full computer diagnostics of all        │ engine.jpg     │
+  │                      │ vehicle systems. Precise fault          │ (5.0L engine   │
+  │                      │ detection.                              │  bay close-up) │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Oil & Filter Change  │ Quick oil change, air and cabin         │ oil-change.jpg │
+  │                      │ filters. Only quality materials used.   │ (Mercedes oil  │
+  │                      │                                         │  pour)         │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Suspension Repair    │ Shock absorbers, springs, control arms  │ suspension.jpg │
+  │                      │ and struts replacement. Ride smoothness │ (red coilover  │
+  │                      │ restored.                               │  close-up)     │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Tire Service         │ Mounting, balancing and seasonal tire   │ tires.jpg      │
+  │                      │ storage. Fast and careful work.         │ (tire rack     │
+  │                      │                                         │  with labels)  │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Body Repair          │ Dent removal, geometry restoration,     │ body-repair.jpg│
+  │                      │ paintless dent repair.                  │ (cars in body  │
+  │                      │                                         │  shop)         │
+  ├──────────────────────┼─────────────────────────────────────────┼────────────────┤
+  │ Auto Painting        │ Spot and full body painting. Color      │ auto-painting  │
+  │                      │ matching, protective coatings.          │ .jpg (polish/  │
+  │                      │                                         │  buffing)      │
+  └──────────────────────┴─────────────────────────────────────────┴────────────────┘
+
+
+================================================================================
+ 9. PRICING SECTION
+================================================================================
+
+Background:     var(--color-bg-primary) = #0d0d0d
+Heading:        "Our Pricing" — "Pricing" in accent orange
+
+Layout:         Flexbox row, centered, gap: 24px
+                Column stack on mobile (<= 768px)
+
+Three tiers:
+
+  ┌─────────────┬───────────────┬──────────────────────────────────────┐
+  │ Tier        │ Price         │ Includes                             │
+  ├─────────────┼───────────────┼──────────────────────────────────────┤
+  │ Basic       │ from $49      │ Oil change                           │
+  │             │               │ Filter replacement                   │
+  │             │               │ Basic diagnostics                    │
+  ├─────────────┼───────────────┼──────────────────────────────────────┤
+  │ Standard    │ from $129     │ Everything in Basic                  │
+  │ (Popular)   │               │ Suspension check                    │
+  │             │               │ Brake inspection                    │
+  │             │               │ Fluid top-off                       │
+  ├─────────────┼───────────────┼──────────────────────────────────────┤
+  │ Complete    │ from $249     │ Everything in Standard               │
+  │             │               │ Full computer diagnostics            │
+  │             │               │ Body work consultation              │
+  │             │               │ Maintenance recommendations         │
+  └─────────────┴───────────────┴──────────────────────────────────────┘
+
+Popular Card:   .price-card--popular
+                - Orange border (border-color: var(--color-accent))
+                - Scaled up: transform: scale(1.04)
+                - "Popular" badge: absolute positioned pill above the card,
+                  orange background, white text, 20px border-radius
+                - On mobile: scale removed (transform: none)
+
+Feature Icons:  Each feature line has an orange checkmark SVG (polyline).
+
+Card Hover:     All cards lift 4px. Popular card combines scale + lift.
+
+
+================================================================================
+ 10. ABOUT US SECTION
+================================================================================
+
+Background:     var(--color-bg-secondary) = #1a1a1a
+Heading:        "About Us" — "Us" in accent orange
+
+Layout:         3-column CSS Grid (1fr 1fr 1fr), gap: 48px, vertically centered.
+                On mobile (<= 768px): single column, centered text.
+
+Column 1 — Photo:
+  .about__image wraps an <img> with class .about__photo.
+  Photo: aboutus.jpg (SUV driving through sand dunes, dramatic action shot)
+  Sizing: width 100%, min-height 280px, object-fit: cover
+  Hover: scale(1.03) with slow transition (0.6s)
+  Container has overflow: hidden to clip the scale effect.
+  Mobile: min-height 200px, max-height 250px.
+
+Column 2 — Animated Stats:
+  3 stat blocks stacked vertically (gap: 32px).
+  On mobile: horizontal row, flex-wrap, centered.
+
+  ┌───────────┬─────────────────────┐
+  │ Number    │ Label               │
+  ├───────────┼─────────────────────┤
+  │ 10+       │ years of experience │
+  │ 5,000+    │ happy customers     │
+  │ 50+       │ car brands served   │
+  └───────────┴─────────────────────┘
+
+  Numbers start at "0" and animate up when scrolled into view.
+  data-target attributes: 10, 5000, 50
+  Font: Oswald, clamp(2rem, 4vw, 3rem), accent orange.
+  Animation: 1500ms, cubic ease-out (see section 7.3).
+  Format: toLocaleString('en-US') — e.g. "5,000+"
+
+Column 3 — Text:
+  Subheading: "Fixin Auto — your trusted garage" (Oswald, uppercase, 1.4rem)
+  Three paragraphs of fictional backstory text.
+  Text color: secondary gray, line-height: 1.7
+
+
+================================================================================
+ 11. CONTACTS SECTION
+================================================================================
+
+Background:     var(--color-bg-primary) = #0d0d0d
+Heading:        "Contacts" — entirely in accent orange
+
+Layout:         2-column CSS Grid (1fr 1fr), gap: 48px.
+                Single column on mobile (<= 768px).
+
+Column 1 — Contact Info:
+  4 items, each with an orange SVG icon + text:
+
+  ┌──────────────┬──────────────────────────────────────┐
+  │ Field        │ Value                                │
+  ├──────────────┼──────────────────────────────────────┤
+  │ Address      │ 42 Fictional Avenue                  │
+  │ Phone        │ +1 (555) 123-4567                    │
+  │ Email        │ info@fixinauto.demo                  │
+  │ Hours        │ Mon-Sat: 9:00 AM - 8:00 PM           │
+  │              │ Sun: closed                          │
+  └──────────────┴──────────────────────────────────────┘
+
+  All data is fictional. The email domain is ".demo" — clearly fake.
+
+  Social Links (below contact items, margin-top: 24px):
+    3 circular icon buttons (44x44px, border-radius: 50%)
+    Platforms: Facebook, Instagram, X (Twitter)
+    All link to "#" — non-functional demo.
+    Hover: background turns accent orange, icon turns white.
+    SVGs use fill="currentColor" for color inheritance.
+
+Column 2 — Map Placeholder:
+  .contacts__map-placeholder
+  No embedded map — instead a styled placeholder box:
+    - Background: var(--color-bg-card)
+    - Border: 2px dashed var(--color-border)
+    - Min-height: 300px
+    - Centered content: location pin SVG + text
+    - Primary text: "Your address could be here"
+    - Secondary text: "This is a demo portfolio project" (smaller, 60% opacity)
+
+  This is intentional — demonstrates placeholder design since a real
+  business address doesn't exist for this demo.
+
+
+================================================================================
+ 12. GUEST WALL SECTION
+================================================================================
+
+Background:     var(--color-bg-secondary) = #1a1a1a
+Heading:        "Guest Wall" — "Wall" in accent orange
+Subtitle:       "Leave a message for the next visitor" (centered, gray)
+
+Purpose:        Live, interactive feature that demonstrates cloud data
+                automation. Real messages are stored in Google Sheets and
+                displayed to all visitors.
+
+12.1  Form (.wall__form)
+
+  Max-width: 600px, centered.
+
+  Textarea:
+    - class: .wall__textarea
+    - maxlength: 200 characters (HTML attribute)
+    - placeholder: "Write something..."
+    - Dark card background with border
+    - Focus: orange border, no outline
+    - Resizable vertically
+
+  Character Counter:
+    - Positioned absolute, bottom-right of textarea
+    - Format: "0 / 200"
+    - Turns red (.wall__char-count--limit) at >= 180 characters
+
+  Form Footer (flex row, space-between):
+    - Left: Error message span (hidden by default)
+    - Right: "Leave Your Mark" submit button
+
+  Submit Shortcuts:
+    - Click the button
+    - Ctrl+Enter or Cmd+Enter (keyboard)
+
+12.2  Message Cards (.wall__messages)
+
+  Layout: CSS Grid, auto-fill, minmax(260px, 1fr)
+  Single column on mobile (<= 768px).
+
+  Each card (.wall__message):
+    - Dark card background
+    - Left border: 3px solid accent orange
+    - Padding: 20px
+    - Rounded corners (var(--radius-md))
+    - Fade-in-up animation on creation (0.4s ease)
+
+  Card content:
+    - .wall__message-text — message text, word-break: break-word
+    - .wall__message-time — relative timestamp (see 12.5)
+
+12.3  Loading State
+
+  .wall__loading shown initially: "Loading messages..."
+  Centered, gray text. Removed after messages load.
+
+  .wall__empty shown when no messages exist:
+    "No messages yet. Be the first!"
+
+12.4  Demo Fallback
+
+  If the API_URL is empty or the fetch fails, 6 hardcoded demo messages
+  are shown instead. This allows the site to work offline / without
+  the Apps Script backend configured.
+
+  Demo messages:
+    "Great service, highly recommend!"
+    "Oil changed in 20 minutes. Legends!"
+    "Was here, everything solid"
+    "Mike was here"
+    "Suspension fixed — rides like new!"
+    "Hello to the next visitor!"
+
+12.5  Relative Timestamps (formatTime function)
+
+  Converts ISO timestamps to human-readable relative times:
+    < 60 seconds:     "just now"
+    < 1 hour:         "X min ago"
+    < 24 hours:       "X hr ago"
+    1 day:            "yesterday"
+    < 7 days:         "X days ago"
+    >= 7 days:        "Nov 1" (toLocaleDateString with day + month)
+
+
+================================================================================
+ 13. GUEST WALL — TECHNICAL FLOW
+================================================================================
+
+13.1  Page Load
+
+  1. wall.js loads, IIFE executes immediately.
+  2. Grabs DOM elements by ID (wallMessage, charCount, wallSubmit,
+     wallError, wallMessages, wallLoading).
+  3. Registers input listener on textarea for character counter.
+  4. Calls loadMessages().
+  5. loadMessages() fetches GET from API_URL + '?limit=20' with
+     { redirect: 'follow' }.
+  6. On success: JSON parsed, renderMessages() called.
+  7. On failure: showDemoMessages() called as fallback.
+
+13.2  Submitting a Message
+
+  1. User types message, clicks "Leave Your Mark" (or Ctrl/Cmd+Enter).
+  2. handleSubmit() fires:
+     a. Trims input text.
+     b. Hides any previous error.
+     c. Calls FixinModeration.check(text) — client-side filter.
+     d. If moderation fails: shows error, returns early.
+     e. Disables submit button (prevents double-submit).
+  3. Creates URLSearchParams body with { message: text }.
+  4. Sends POST to API_URL:
+     - method: 'POST'
+     - mode: 'no-cors' (opaque response — can't read body)
+     - Content-Type: application/x-www-form-urlencoded
+  5. On .then() (request sent, network OK):
+     a. addOptimisticMessage(text) — inserts card at top of wall
+        immediately, before server confirms.
+     b. Clears textarea, resets character counter.
+     c. setTimeout(loadMessages, 2000) — refreshes from server after
+        2 seconds to get the canonical list.
+  6. On .catch(): shows "Failed to send. Please try again."
+  7. .finally(): re-enables submit button.
+
+13.3  Optimistic UI
+
+  Messages appear instantly in the DOM via addOptimisticMessage().
+  The card is prepended before the first existing .wall__message.
+  If the wall was empty, the "No messages yet" placeholder is removed.
+  2 seconds later, loadMessages() re-fetches the full list from the
+  server, replacing all cards with the canonical data.
+
+13.4  CORS Strategy
+
+  Google Apps Script web apps redirect on both GET and POST.
+
+  GET:  fetch(url, { redirect: 'follow' })
+        Follows the redirect chain. Response is readable JSON.
+
+  POST: fetch(url, { mode: 'no-cors' })
+        Returns an opaque response (status 0, body unreadable).
+        Success is inferred from the absence of a network error.
+        The 2-second delayed GET confirms the message was stored.
+
+
+================================================================================
+ 14. GOOGLE APPS SCRIPT BACKEND (Code.gs)
+================================================================================
+
+File:           apps-script/Code.gs (169 lines)
+                Stored in the repo for version control / reference.
+                Must be manually pasted into the Apps Script editor.
+
+Deployment:     Extensions > Apps Script > Deploy > Web app
+                Execute as: Me (the Google account owner)
+                Who has access: Anyone
+                Produces a URL like:
+                https://script.google.com/macros/s/.../exec
+
+Sheet:          SHEET_NAME = 'Messages'
+                Columns: A (timestamp), B (message), C (status)
+                If the sheet doesn't exist, getSheet() creates it
+                with headers automatically.
+
+14.1  doPost(e) — Receiving Messages
+
+  Input:        e.parameter.message (URL-encoded form data)
+
+  Validation:
+    1. Empty check — rejects if blank
+    2. Length check — rejects if > 200 characters
+    3. Duplicate check — isDuplicate() (see 14.3)
+    4. Moderation — moderate() (see 14.4)
+
+  If moderation passes: status = 'approved'
+  If moderation fails:  status = 'rejected'
+
+  Both approved and rejected messages are stored in the sheet
+  (rejected ones kept for audit purposes).
+
+  Row written: [ISO timestamp, message text, status]
+
+  Response: JSON { success: true/false, status: 'approved'/'rejected' }
+  (Note: client uses mode: 'no-cors', so this response is unreadable
+  from the browser. It's useful for curl / direct testing only.)
+
+14.2  doGet(e) — Reading Messages
+
+  Input:        e.parameter.limit (optional, default 20, max 100)
+
+  Process:
+    1. Gets the sheet, reads all rows.
+    2. Iterates backwards (newest first).
+    3. Collects only rows where status === 'approved'.
+    4. Stops after reaching the limit.
+    5. Converts Date objects to ISO strings.
+
+  Response: JSON array of { text, timestamp } objects.
+
+  On error: returns empty array [] (fails silently).
+
+14.3  Rate Limiting — isDuplicate(sheet, text)
+
+  Checks the last 10 rows in the sheet.
+  If any row has the same message text AND was written within the
+  last 30 seconds (30000ms), it's flagged as a duplicate.
+
+  This prevents accidental double-posts and spam.
+
+14.4  Server-Side Moderation — moderate(text)
+
+  Identical to the client-side filter (same 25 regex patterns).
+  Uses the same normalize() function for leet-speak substitution.
+
+  Returns true (allowed) or false (blocked).
+
+  Rejected messages are still written to the sheet with status 'rejected'
+  for auditing. They are never returned by doGet().
+
+
+================================================================================
+ 15. CONTENT MODERATION SYSTEM
+================================================================================
+
+File:           js/moderation.js (75 lines) — client-side
+                apps-script/Code.gs — server-side duplicate
+
+Architecture:   Dual-layer filtering. The same patterns run in both places.
+                Client-side: provides instant feedback to the user.
+                Server-side: protects against bypassed client filters
+                             (DevTools, curl, direct API calls).
+
+15.1  Philosophy
+
+  Profanity IS allowed — keeps the guest wall feeling authentic and lively.
+  Only hard-offensive content is blocked:
+    - Racist and ethnic slurs
+    - Misogynistic violence
+    - Homophobic slurs
+    - Calls to violence / genocide
+    - Extremist symbols and phrases
+
+15.2  Blocked Patterns (27 on client, 25 on server)
+
+  The patterns use word boundaries (\b) and case-insensitive flags (/i).
+
+  Categories:
+    Racial slurs:           n-word variants, k*ke, sp*c, ch*nk,
+                            w*tback, g**k, c**n, darkie, raghead, towelhead
+    Misogynistic:           "kill (all) women", "women deserve (to) die"
+    Homophobic:             f-slur, t-slur, dyke
+    Violence/extremism:     "kill all/them/every", "genocide is good/based/needed",
+                            "gas the/all", "exterminate", "ethnic cleansing",
+                            "holocaust was fake/hoax/didn't", "race war",
+                            "white power", "heil hitler", "1488", "sieg heil"
+
+15.3  Leet-Speak Normalization
+
+  The normalize() function converts common substitutions before checking:
+    0 → o          (e.g. "g00k" → "gook")
+    @ → a          (e.g. "f@ggot" → "faggot")
+    1 → i          (e.g. "n1gger" → "nigger")
+    3 → e          (e.g. "n3gro" → "negro")
+    $ → s          (e.g. "$ieg" → "sieg")
+
+  Also lowercases and trims the text.
+
+15.4  Client-Side Check (FixinModeration.check)
+
+  Exposed as a global object via IIFE + return pattern.
+  Called as: FixinModeration.check(text) → { pass: boolean, reason: string }
+
+  Also validates:
+    - Empty/whitespace-only messages → "Message cannot be empty"
+    - Over 200 characters → "Maximum 200 characters"
+    - Pattern match → "Message contains inappropriate content"
+
+15.5  XSS Prevention
+
+  All user-generated message text is rendered via textContent, never
+  innerHTML. This prevents script injection regardless of what the
+  user types. The createMessageCard() function in wall.js creates
+  DOM elements programmatically and sets text content safely.
+
+
+================================================================================
+ 16. SMOOTH SCROLLING
+================================================================================
+
+File:           js/smooth-scroll.js (37 lines)
+                Wrapped in IIFE.
+
+Behavior:       All anchor links (a[href^="#"]) get a click handler.
+
+  1. Prevents default jump behavior.
+  2. If the mobile menu is open, closes it first.
+  3. Calculates the scroll offset:
+     offset = --banner-height + --nav-height (read from computed styles)
+     This accounts for the fixed banner and sticky nav.
+  4. Scrolls to the target section using window.scrollTo() with
+     behavior: 'smooth'.
+
+  Links to "#" (logo link) do nothing — guarded by early return.
+
+
+================================================================================
+ 17. DESIGN SYSTEM
+================================================================================
+
+17.1  Color Palette (css/variables.css)
+
+  Backgrounds:
+    --color-bg-primary:     #0d0d0d   (darkest, main background)
+    --color-bg-secondary:   #1a1a1a   (slightly lighter, alternating sections)
+    --color-bg-card:        #242424   (card surfaces)
+    --color-bg-card-hover:  #2e2e2e   (card hover state)
+
+  Accent:
+    --color-accent:         #ff6b00   (primary orange — automotive feel)
+    --color-accent-hover:   #ff8c33   (lighter orange for hover states)
+    --color-accent-dim:     rgba(255, 107, 0, 0.15) (subtle orange tint)
+
+  Text:
+    --color-text-primary:   #f0f0f0   (headings, important text)
+    --color-text-secondary: #a0a0a0   (body text, descriptions)
+    --color-text-muted:     #666      (timestamps, placeholders)
+
+  Banner:
+    --color-banner-bg:      #ffe100   (bright yellow)
+    --color-banner-text:    #1a1a1a   (dark on yellow)
+
+  Utility:
+    --color-border:         #333      (subtle borders)
+    --color-success:        #4caf50   (green — currently unused)
+    --color-danger:         #e53935   (red — error messages, char limit)
+
+17.2  Typography
+
+  Headings:     --font-heading: 'Oswald', sans-serif
+                Bold (700), industrial feel, uppercase throughout.
+                Sizes: clamp-based for responsiveness.
+
+  Body:         --font-body: 'Roboto', sans-serif
+                Weights: 300 (tagline), 400 (body text), 500 (banner, buttons)
+                Line-height: 1.6 (body default), 1.5 (cards), 1.7 (about text)
+
+  Both loaded from Google Fonts with preconnect.
+
+17.3  Spacing
+
+  --container-width:    1200px
+  --container-padding:  16px
+  --section-padding:    80px 0 (desktop), 48px 0 (mobile)
+  --gap:                24px (desktop), 16px (mobile)
+
+17.4  Border Radii
+
+  --radius-sm:  6px   (buttons, small card images)
+  --radius-md:  12px  (cards, major containers)
+  --radius-lg:  20px  (currently unused)
+
+17.5  Transitions
+
+  --transition-fast:    0.2s ease  (hover effects, border changes)
+  --transition-medium:  0.4s ease  (currently unused in CSS — available)
+  --transition-slow:    0.6s ease  (reveal animations, photo hover scale)
+
+17.6  Computed Values
+
+  --header-offset: calc(var(--banner-height) + var(--nav-height))
+                   = 40px + 64px = 104px
+                   Used by smooth-scroll.js to position sections correctly.
+
+
+================================================================================
+ 18. CSS ARCHITECTURE
+================================================================================
+
+18.1  File Organization
+
+  7 files, loaded in dependency order:
+    reset.css      — Universal box-sizing, margin/padding reset, defaults
+    variables.css  — All CSS custom properties (design tokens)
+    main.css       — Body, container, section-title, buttons, reveal animation
+    banner.css     — Demo banner only
+    hero.css       — Hero section only
+    sections.css   — Nav + all content sections + footer + responsive
+    wall.css       — Guest wall form + message cards
+
+18.2  Naming Convention
+
+  BEM-inspired (Block__Element--Modifier):
+    .service-card              (block)
+    .service-card__title       (element)
+    .service-card__img         (element)
+    .price-card--popular       (modifier)
+    .wall__char-count--limit   (modifier)
+
+18.3  CSS Reset (reset.css — 37 lines)
+
+  - *, *::before, *::after: box-sizing: border-box; margin: 0; padding: 0
+  - html: scroll-behavior: smooth; text-size-adjust: 100%
+  - body: min-height: 100vh; line-height: 1.6; font smoothing
+  - img, svg: display: block; max-width: 100%
+  - input, textarea, button: font: inherit; color: inherit
+  - a: color: inherit; text-decoration: none
+  - ul, ol: list-style: none
+
+18.4  Responsive Breakpoints (desktop-first)
+
+  1024px:  Services grid goes from 3 → 2 columns.
+
+  768px:   Nav links hidden, hamburger appears.
+           Mobile menu slides in from right.
+           Services grid goes to 1 column.
+           Prices stack vertically, popular card loses scale.
+           About section goes to 1 column, centered text.
+           About stats become horizontal row.
+           About photo: min-height 200px, max-height 250px.
+           Contacts goes to 1 column.
+           Wall messages go to 1 column.
+           Section padding: 48px 0.
+           Gap: 16px.
+           Hero wheel opacity: 0.15 (dimmer on small screens).
+
+18.5  Animations
+
+  CSS:
+    @keyframes bounce — hero scroll indicator (infinite, 2s)
+    @keyframes slideIn — mobile menu entrance (0.3s)
+    @keyframes fadeInUp — new wall message card (0.4s)
+    .reveal → .revealed transition (0.6s)
+
+  JavaScript:
+    Wheel rotation — continuous via requestAnimationFrame
+    Count-up numbers — 1500ms, cubic ease-out
+    Stagger delays — 100ms increments per card
+
+
+================================================================================
+ 19. IMAGE ASSETS
+================================================================================
+
+All images stored in assets/img/. Total: 11 files.
+
+19.1  Vector Graphics (SVG)
+
+  favicon.svg (534 bytes):
+    32x32 viewBox, dark rounded-rect background (#0d0d0d, rx: 6).
+    Orange wrench shape made of stroked paths.
+    Referenced in <head> as the browser tab icon.
+
+  wheel.svg (2.3 KB):
+    400x400 viewBox, monochrome gray tones.
+    Components: tire outer ring (2 circles), rim, 5 spokes with highlights,
+    hub with outer ring, 5 bolts, center cap, 14 decorative brake disk holes.
+    Used as the hero section's spinning animation element.
+    Marked aria-hidden="true" (decorative).
+
+19.2  Photography (JPEG)
+
+  All photos resized to max 800-1000px on longest side and JPEG-optimized
+  at quality 75 via sips + cjpeg. Total image weight: ~1 MB (down from ~20 MB).
+
+  ┌───────────────────┬──────────┬──────────────────────────────────────────┐
+  │ File              │ Size     │ Content / Where Used                     │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ hero-bg.jpg       │ 186 KB   │ Mechanic with wrench, dark moody.        │
+  │                   │          │ → Hero section background.               │
+  │                   │          │   loading="eager" (above the fold)       │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ engine.jpg        │  68 KB   │ 5.0L engine bay, carbon fiber intake.    │
+  │                   │          │ → Engine Diagnostics service card.        │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ oil-change.jpg    │  86 KB   │ Mercedes oil pour close-up.              │
+  │                   │          │ → Oil & Filter Change service card.       │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ suspension.jpg    │  76 KB   │ Red coilover spring and shock absorber.  │
+  │                   │          │ → Suspension Repair service card.         │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ tires.jpg         │ 115 KB   │ Tire rack with price/spec labels.        │
+  │                   │          │ → Tire Service card.                      │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ body-repair.jpg   │ 142 KB   │ Multiple Nissan cars in body shop.       │
+  │                   │          │ → Body Repair service card.               │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ auto-painting.jpg │  91 KB   │ Car being polished / buffed.             │
+  │                   │          │ → Auto Painting service card.             │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ aboutus.jpg       │  89 KB   │ SUV driving through sand dunes.          │
+  │                   │          │ → About Us section photo.                 │
+  ├───────────────────┼──────────┼──────────────────────────────────────────┤
+  │ workshop.jpg      │ 188 KB   │ Workshop with vehicle ramps.             │
+  │                   │          │ (Available as backup, not currently used) │
+  └───────────────────┴──────────┴──────────────────────────────────────────┘
+
+  All service card images use loading="lazy" for performance.
+  Hero background uses loading="eager" since it's above the fold.
+  All images use object-fit: cover for consistent sizing.
+
+
+================================================================================
+ 20. JAVASCRIPT ARCHITECTURE
+================================================================================
+
+20.1  No Globals (Almost)
+
+  Every JS file wraps its code in an IIFE (Immediately Invoked Function
+  Expression): (function() { ... })();
+
+  Exception: moderation.js exposes `FixinModeration` as a global object
+  because wall.js depends on it. This is the ONLY intentional global.
+
+20.2  No Build Tools
+
+  All scripts are vanilla ES5-compatible JavaScript.
+  No transpilation, no bundling, no minification.
+  Can be served from any static file server.
+
+20.3  Performance Patterns
+
+  - passive: true on scroll listener — prevents layout thrashing
+  - requestAnimationFrame throttling — one animation tick per frame
+  - IntersectionObserver — no scroll-position polling for reveals
+  - unobserve() after reveal — no continued observation of visible elements
+  - will-change: transform — GPU layer hint for animated elements
+  - Early return guard (scrollY < heroH * 1.2) — no work when hero is
+    offscreen
+  - DocumentFragment for bulk DOM insertion (renderMessages)
+
+20.4  Script Loading Order
+
+  All 5 scripts are at the end of <body> (before </body>).
+  They execute synchronously in order:
+    1. scroll-animation.js — safe to run first, queries DOM elements
+    2. smooth-scroll.js — attaches click listeners to anchors
+    3. mobile-menu.js — attaches click listener to hamburger
+    4. moderation.js — defines FixinModeration global
+    5. wall.js — uses FixinModeration, starts loadMessages()
+
+
+================================================================================
+ 21. FOOTER
+================================================================================
+
+Text:           "Fixin Auto — demo project. All data is fictional. (c) 2026"
+Background:     var(--color-bg-secondary) = #1a1a1a
+Border:         1px solid var(--color-border) on top
+Padding:        24px 0
+Font:           0.85rem, var(--color-text-muted)
+Alignment:      Centered
+
+
+================================================================================
+ 22. ACCESSIBILITY
+================================================================================
+
+  - Semantic HTML: <nav>, <section>, <footer>, <h1>-<h3>, <ul>/<li>
+  - aria-label on hamburger button (toggles "Open menu" / "Close menu")
+  - aria-expanded on hamburger (tracks open state)
+  - aria-hidden="true" on decorative wheel SVG
+  - aria-label on social link buttons ("Facebook", "Instagram", "X (Twitter)")
+  - alt text on all images describing content
+  - maxlength attribute on textarea for hard character limit
+  - Focus styles: textarea gets orange border on :focus
+  - Semantic outline: none replaced with visible border change
+  - Button disabled state has opacity: 0.5 and cursor: not-allowed
+  - Color contrast: white/light-gray text on dark backgrounds
+  - Font sizing uses clamp() and rem — respects user browser settings
+
+
+================================================================================
+ 23. PERFORMANCE CONSIDERATIONS
+================================================================================
+
+  - No frameworks, no npm dependencies — zero JavaScript overhead
+  - Google Fonts loaded with preconnect for faster DNS + TLS
+  - Hero image: loading="eager" (above the fold)
+  - All other images: loading="lazy" (native lazy loading)
+  - CSS files are small and specific (7 files, largest is 493 lines)
+  - SVGs are inline in HTML (icons) or tiny files (wheel: 2.3KB, favicon: 534B)
+  - No external CDN dependencies (no jQuery, no Bootstrap, no Tailwind)
+  - Passive scroll listener prevents jank
+  - requestAnimationFrame ensures 60fps animation
+  - IntersectionObserver is more efficient than scroll-position checks
+  - will-change: transform on animated elements (GPU compositing)
+  - All JS is ES5 compatible — no transpilation needed
+
+  Image optimization (implemented):
+  - All photos resized to max 800-1000px (retina-safe for their display size)
+  - JPEG quality 75 via cjpeg with optimization flags
+  - Total image payload: ~1 MB (down from ~20 MB — 95% reduction)
+
+  Potential further improvements (not implemented):
+  - WebP/AVIF format with <picture> fallback
+  - Critical CSS inlining
+  - Service worker for offline caching
+
+
+================================================================================
+ 24. SECURITY
+================================================================================
+
+  - XSS: All user input rendered via textContent (never innerHTML)
+  - Input validation: Client-side (length, empty check, moderation)
+  - Server validation: Same checks duplicated in Apps Script
+  - Rate limiting: 30-second duplicate message window
+  - No sensitive data stored or transmitted
+  - No authentication required (public guest wall by design)
+  - No cookies, no localStorage, no tracking
+  - Google Apps Script handles HTTPS automatically
+  - Social links point to "#" — no external redirects
+  - Email shown is a .demo domain — cannot receive real mail
+  - mode: 'no-cors' on POST prevents reading response (but since
+    we own the API, this is acceptable — we confirm via GET)
+
+
+================================================================================
+ 25. HOW TO SET UP FROM SCRATCH
+================================================================================
+
+25.1  Local Development
+
+  1. Clone or download the project folder.
+  2. Open a terminal in the project root (freelance/).
+  3. Start a local server:
+       python3 -m http.server 8000
+  4. Open http://localhost:8000 in a browser.
+  5. The site works fully offline — guest wall shows demo messages.
+
+25.2  Google Apps Script Setup (for live Guest Wall)
+
+  1. Create a new Google Sheet (any name).
+  2. Go to Extensions > Apps Script.
+  3. Delete the default Code.gs content.
+  4. Paste the contents of apps-script/Code.gs.
+  5. Click Deploy > New deployment.
+  6. Set type: Web app.
+  7. Execute as: Me.
+  8. Who has access: Anyone.
+  9. Click Deploy. Copy the web app URL.
+  10. Open js/wall.js and replace the API_URL value with your URL.
+  11. The "Messages" sheet tab is created automatically on first request.
+
+25.3  Deploying to GitHub Pages
+
+  1. Push the project to a GitHub repository.
+  2. Go to Settings > Pages.
+  3. Source: Deploy from a branch.
+  4. Branch: main, folder: / (root).
+  5. The site will be live at https://username.github.io/repo-name/
+
+
+================================================================================
+ 26. FILE-BY-FILE LINE COUNTS
+================================================================================
+
+  ┌──────────────────────────┬───────┐
+  │ File                     │ Lines │
+  ├──────────────────────────┼───────┤
+  │ index.html               │   371 │
+  │ css/reset.css            │    37 │
+  │ css/variables.css        │    41 │
+  │ css/main.css             │    80 │
+  │ css/banner.css           │    29 │
+  │ css/hero.css             │   104 │
+  │ css/sections.css         │   493 │
+  │ css/wall.css             │   133 │
+  │ js/scroll-animation.js   │   102 │
+  │ js/smooth-scroll.js      │    37 │
+  │ js/mobile-menu.js        │    27 │
+  │ js/moderation.js         │    75 │
+  │ js/wall.js               │   195 │
+  │ apps-script/Code.gs      │   169 │
+  │ .gitignore               │     7 │
+  ├──────────────────────────┼───────┤
+  │ TOTAL                    │ 1,900 │
+  └──────────────────────────┴───────┘
+
+
+================================================================================
+ END OF AUDIT
+================================================================================

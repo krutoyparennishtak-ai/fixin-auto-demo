@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixin Auto — Auto Service</title>
+  <meta name="description" content="Demo case: Fixin Auto service website. Portfolio example — interactivity, UX, cloud automation.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/banner.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/wall.css">
+</head>
+<body>
+
+  <!-- Demo Banner -->
+  <div class="demo-banner">
+    <span class="demo-banner__text">Demo / portfolio example — this is not a real business</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">Fixin <span>Auto</span></a>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#services" class="nav__link">Services</a></li>
+        <li><a href="#prices" class="nav__link">Pricing</a></li>
+        <li><a href="#about" class="nav__link">About Us</a></li>
+        <li><a href="#contacts" class="nav__link">Contacts</a></li>
+        <li><a href="#wall" class="nav__link">Guest Wall</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="assets/img/hero-bg.jpg" alt="Mechanic working on engine" class="hero__bg-img" loading="eager">
+    </div>
+    <div class="hero__wheel-wrapper" id="heroWheel">
+      <img src="assets/img/wheel.svg" alt="" class="hero__wheel" aria-hidden="true">
+    </div>
+    <div class="hero__content">
+      <h1 class="hero__title">Fixin <span>Auto</span></h1>
+      <p class="hero__tagline">Your car is in reliable hands</p>
+      <a href="#services" class="btn btn-primary">Our Services</a>
+    </div>
+    <div class="hero__scroll-indicator">
+      <span>Scroll down</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services" id="services">
+    <div class="container">
+      <h2 class="section-title">Our <span>Services</span></h2>
+      <div class="services__grid">
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Engine Diagnostics</h3>
+          <p class="service-card__desc">Full computer diagnostics of all vehicle systems. Precise fault detection.</p>
+          <img src="assets/img/engine.jpg" alt="Engine diagnostics close-up" class="service-card__img" loading="lazy">
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Oil &amp; Filter Change</h3>
+          <p class="service-card__desc">Quick oil change, air and cabin filters. Only quality materials used.</p>
+          <img src="assets/img/oil-change.jpg" alt="Oil change service" class="service-card__img" loading="lazy">
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Suspension Repair</h3>
+          <p class="service-card__desc">Shock absorbers, springs, control arms and struts replacement. Ride smoothness restored.</p>
+          <img src="assets/img/suspension.jpg" alt="Suspension spring and shock absorber" class="service-card__img" loading="lazy">
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Tire Service</h3>
+          <p class="service-card__desc">Mounting, balancing and seasonal tire storage. Fast and careful work.</p>
+          <img src="assets/img/tires.jpg" alt="Tire rack with labeled tires" class="service-card__img" loading="lazy">
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a4 4 0 00-8 0v2"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Body Repair</h3>
+          <p class="service-card__desc">Dent removal, geometry restoration, paintless dent repair.</p>
+          <img src="assets/img/body-repair.jpg" alt="Cars in body repair shop" class="service-card__img" loading="lazy">
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <h3 class="service-card__title">Auto Painting</h3>
+          <p class="service-card__desc">Spot and full body painting. Color matching, protective coatings.</p>
+          <img src="assets/img/auto-painting.jpg" alt="Auto polishing and painting" class="service-card__img" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Prices -->
+  <section class="prices" id="prices">
+    <div class="container">
+      <h2 class="section-title">Our <span>Pricing</span></h2>
+      <div class="prices__grid">
+
+        <div class="price-card reveal">
+          <h3 class="price-card__name">Basic</h3>
+          <div class="price-card__price">from $49 <small></small></div>
+          <ul class="price-card__features">
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Oil change
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Filter replacement
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic diagnostics
+            </li>
+          </ul>
+        </div>
+
+        <div class="price-card price-card--popular reveal">
+          <div class="price-card__badge">Popular</div>
+          <h3 class="price-card__name">Standard</h3>
+          <div class="price-card__price">from $129 <small></small></div>
+          <ul class="price-card__features">
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Basic
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Suspension check
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Brake inspection
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Fluid top-off
+            </li>
+          </ul>
+        </div>
+
+        <div class="price-card reveal">
+          <h3 class="price-card__name">Complete</h3>
+          <div class="price-card__price">from $249 <small></small></div>
+          <ul class="price-card__features">
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Standard
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Full computer diagnostics
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Body work consultation
+            </li>
+            <li class="price-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Maintenance recommendations
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container">
+      <h2 class="section-title">About <span>Us</span></h2>
+      <div class="about__inner">
+        <div class="about__image reveal">
+          <img src="assets/img/aboutus.jpg" alt="SUV driving through sand dunes" class="about__photo" loading="lazy">
+        </div>
+        <div class="about__stats reveal">
+          <div class="stat">
+            <div class="stat__number" data-target="10">0</div>
+            <div class="stat__label">years of experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number" data-target="5000">0</div>
+            <div class="stat__label">happy customers</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number" data-target="50">0</div>
+            <div class="stat__label">car brands served</div>
+          </div>
+        </div>
+        <div class="about__text reveal">
+          <h3>Fixin Auto — your trusted garage</h3>
+          <p>We've been in business since 2014 and have serviced thousands of vehicles. Our team consists of certified mechanics with 5+ years of hands-on experience.</p>
+          <p>We use only proven parts and quality consumables. Every repair comes with a warranty. We value your time — that's why we work fast and precise.</p>
+          <p>Our mission is to keep your car in perfect condition, so you can drive with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacts -->
+  <section class="contacts" id="contacts">
+    <div class="container">
+      <h2 class="section-title"><span>Contacts</span></h2>
+      <div class="contacts__inner">
+        <div class="contacts__info reveal">
+          <div class="contact-item">
+            <svg class="contact-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <div class="contact-item__text">
+              <strong>Address</strong>
+              42 Fictional Avenue
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="contact-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            <div class="contact-item__text">
+              <strong>Phone</strong>
+              +1 (555) 123-4567
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="contact-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="20" height="18" rx="2"/>
+              <path d="M2 7l10 7 10-7"/>
+            </svg>
+            <div class="contact-item__text">
+              <strong>Email</strong>
+              info@fixinauto.demo
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="contact-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <div class="contact-item__text">
+              <strong>Working Hours</strong>
+              Mon–Sat: 9:00 AM — 8:00 PM<br>Sun: closed
+            </div>
+          </div>
+
+          <div class="contacts__socials">
+            <a href="#" class="contacts__social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="contacts__social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="#" class="contacts__social-link" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="contacts__map-placeholder reveal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <p>Your address could be here</p>
+          <p style="font-size: 0.8rem; opacity: 0.6;">This is a demo portfolio project</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guest Wall -->
+  <section class="wall" id="wall">
+    <div class="container">
+      <h2 class="section-title">Guest <span>Wall</span></h2>
+      <p style="text-align:center; color: var(--color-text-secondary); margin-top: -32px; margin-bottom: 40px;">Leave a message for the next visitor</p>
+
+      <div class="wall__form">
+        <div class="wall__input-wrapper">
+          <textarea
+            class="wall__textarea"
+            id="wallMessage"
+            maxlength="200"
+            placeholder="Write something..."
+          ></textarea>
+          <span class="wall__char-count" id="charCount">0 / 200</span>
+        </div>
+        <div class="wall__form-footer">
+          <span class="wall__error" id="wallError"></span>
+          <button class="btn btn-primary wall__submit" id="wallSubmit">Leave Your Mark</button>
+        </div>
+      </div>
+
+      <div class="wall__messages" id="wallMessages">
+        <div class="wall__loading" id="wallLoading">Loading messages...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Fixin Auto — demo project. All data is fictional. &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/scroll-animation.js"></script>
+  <script src="js/smooth-scroll.js"></script>
+  <script src="js/mobile-menu.js"></script>
+  <script src="js/moderation.js"></script>
+  <script src="js/wall.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+.demo-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--banner-height);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-banner-bg),
+    var(--color-banner-bg) 10px,
+    #ffd700 10px,
+    #ffd700 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-banner-text);
+  letter-spacing: 0.02em;
+}
+
+.demo-banner__text {
+  background: var(--color-banner-bg);
+  padding: 0 12px;
+}

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Tire outer ring -->
+  <circle cx="200" cy="200" r="195" stroke="#333" stroke-width="8"/>
+  <circle cx="200" cy="200" r="170" stroke="#444" stroke-width="3"/>
+
+  <!-- Rim -->
+  <circle cx="200" cy="200" r="155" fill="#1a1a1a" stroke="#555" stroke-width="2"/>
+
+  <!-- Spokes (5) -->
+  <g stroke="#666" stroke-width="2" fill="#2a2a2a">
+    <path d="M200 60 L230 170 Q200 185 170 170 Z"/>
+    <path d="M333 137 L240 190 Q230 160 250 140 Z"/>
+    <path d="M282 310 L220 210 Q245 195 260 220 Z"/>
+    <path d="M118 310 L180 210 Q155 195 140 220 Z"/>
+    <path d="M67 137 L160 190 Q170 160 150 140 Z"/>
+  </g>
+
+  <!-- Spoke highlights -->
+  <g stroke="#888" stroke-width="0.5" fill="none">
+    <path d="M200 65 L225 165"/>
+    <path d="M328 140 L238 188"/>
+    <path d="M278 306 L218 212"/>
+    <path d="M122 306 L182 212"/>
+    <path d="M72 140 L162 188"/>
+  </g>
+
+  <!-- Hub outer -->
+  <circle cx="200" cy="200" r="50" fill="#222" stroke="#666" stroke-width="2"/>
+  <circle cx="200" cy="200" r="42" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+
+  <!-- Bolts (5) -->
+  <circle cx="200" cy="170" r="6" fill="#444" stroke="#666" stroke-width="1"/>
+  <circle cx="228" cy="182" r="6" fill="#444" stroke="#666" stroke-width="1"/>
+  <circle cx="218" cy="213" r="6" fill="#444" stroke="#666" stroke-width="1"/>
+  <circle cx="182" cy="213" r="6" fill="#444" stroke="#666" stroke-width="1"/>
+  <circle cx="172" cy="182" r="6" fill="#444" stroke="#666" stroke-width="1"/>
+
+  <!-- Center cap -->
+  <circle cx="200" cy="200" r="18" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+  <circle cx="200" cy="200" r="8" fill="#333" stroke="#666" stroke-width="0.5"/>
+
+  <!-- Brake disk holes (decorative) -->
+  <g fill="#111" opacity="0.5">
+    <circle cx="200" cy="110" r="4"/>
+    <circle cx="270" cy="145" r="4"/>
+    <circle cx="290" cy="220" r="4"/>
+    <circle cx="240" cy="285" r="4"/>
+    <circle cx="160" cy="285" r="4"/>
+    <circle cx="110" cy="220" r="4"/>
+    <circle cx="130" cy="145" r="4"/>
+    <circle cx="235" cy="100" r="3"/>
+    <circle cx="300" cy="180" r="3"/>
+    <circle cx="268" cy="265" r="3"/>
+    <circle cx="188" cy="295" r="3"/>
+    <circle cx="120" cy="260" r="3"/>
+    <circle cx="102" cy="175" r="3"/>
+    <circle cx="170" cy="105" r="3"/>
+  </g>
+</svg>
